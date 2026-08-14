@@ -1,0 +1,51 @@
+<head>
+  <%= stylesheet_link_tag "flights/index", "data-turbo-track": "reload" %>
+</head>
+<body>
+  <div class="flex-container">
+    <div class="search-bar">
+      <%= form_with url: "flights", method: :get do |form| %>
+        <%= select_tag(
+          :departure_airport_id, 
+          options_for_select(
+            [["-",""]] + @flight_departure_options, 
+            params[:departure_airport_id]
+          ),
+          onchange: "this.form.submit();"
+        )%>
+        <%= select_tag(
+          :arrival_airport_id,
+          options_for_select(
+            [["-",""]] + @flight_arrival_options,
+            params[:arrival_airport_id]
+          ),
+          onchange: "this.form.submit();"
+        )%>
+        <%= date_field_tag :date, 
+          params[:date],
+          min: "2026-09-01",
+          max: "2026-09-20", 
+          onchange: "this.form.submit();" 
+        %>
+        <%= number_field_tag :duration, params[:duration], in: 30..360, step:30, onchange: "this.form.submit();"%>
+      <% end %>
+    </div><!--search-bar-->
+    <div class="results">
+      <% @flights.each do |f| %>
+        <div class="flight-result-card">
+          <h3>
+            <%= f.departure_airport.name %>
+            &#10142;
+            <%= f.arrival_airport.name %>
+          </h3>
+          <p>
+            Time: <%= f.date %>
+            Duration: <%= f.duration %>
+          </p>
+            
+
+        </div><!--flight-result-card-->
+      <% end %>
+    </div>
+  </div><!--flex-container-->
+</body>
